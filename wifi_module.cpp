@@ -4,6 +4,7 @@
 #include "nRF24L01P.h"
 #include "arch/cortexM4_stm32f4/common/CMSIS/stm32f4xx.h"
 #include <miosix/kernel/scheduler/scheduler.h>
+#define TRANSFER_SIZE 4
 
 using namespace std;
 using namespace miosix;
@@ -12,6 +13,7 @@ bool trasmission;
 int num_step=0;
 static Thread *waiting=0;
 char *data; //data received from air
+
 
 typedef Gpio<GPIOD_BASE,12> greenLed;
 typedef Gpio<GPIOA_BASE,1> IRQ;
@@ -63,78 +65,64 @@ void configureModuleInterrupt()
 }
 void *wifi_start(void *arg)
 {
-    char data[32] = "prova";
-    nRF24L01P *wifi;
-    wifi = new nRF24L01P();
-    greenLed::mode(Mode::OUTPUT);
-    redLed::mode(Mode::OUTPUT);
-    configureModuleInterrupt();
-    wifi->test_transmit();
-    greenLed::high();
-    usleep(1000000);
-    greenLed::low();
-    for(;;){
-        greenLed::high();
-         /*printf("Dammi un stringa da trasmettere\n");
-        scanf("%s", data);*/
-        wifi->transmit(6,data);
-        printf("Ho trasmesso\n");
-        greenLed::low();
-        usleep(2000000);
-        /*wifi->receive(0,data,1);
-        printf("Received data: %d",*data);
-        greenLed::high();
+    nRF24L01P *my_nrf24l01p = new nRF24L01P();
+
+    char txData[TRANSFER_SIZE]="cia";
+    int txDataCnt = 4;
+ 
+    my_nrf24l01p->powerUp();
+ 
+    // Display the (default) setup of the nRF24L01+ chip
+    printf( "nRF24L01+ Frequency    : %d MHz\r\n",  my_nrf24l01p->getRfFrequency() );
+    printf( "nRF24L01+ Output power : %d dBm\r\n",  my_nrf24l01p->getRfOutputPower() );
+    printf( "nRF24L01+ Data Rate    : %d kbps\r\n", my_nrf24l01p->getAirDataRate() );
+    printf( "nRF24L01+ TX Address   : 0x%010llX\r\n", my_nrf24l01p->getTxAddress() );
+    printf( "nRF24L01+ RX Address   : 0x%010llX\r\n", my_nrf24l01p->getRxAddress() );
+ 
+    printf( "Type keys to test transfers:\r\n  (transfers are grouped into %d characters)\r\n", TRANSFER_SIZE );
+ 
+     my_nrf24l01p->setTransferSize( TRANSFER_SIZE );
+ 
+    my_nrf24l01p->setReceiveMode();
+    my_nrf24l01p->enable();
+
+    while(1){
+        my_nrf24l01p->write( NRF24L01P_PIPE_P0, txData, txDataCnt );
         usleep(1000000);
-        greenLed::low();
-        num_step = wifi->receive();
-        if (trasmission){
-            wifi->transmit(num_step);
-        }
-        else{
-            wifi->receive();
-        }
-    */
-    }
-    
+}
    
     printf("Hello world, write your application here\n");
     
 }
 
 void *wifi_receive(void *arg){
-     char data[32] = "prova";
-    nRF24L01P *wifi;
-    wifi = new nRF24L01P();
-    greenLed::mode(Mode::OUTPUT);
-    redLed::mode(Mode::OUTPUT);
-    configureModuleInterrupt();
-    wifi->test_receive();
-    greenLed::high();
-    usleep(1000000);
-    greenLed::low();
-    for(;;){
-        printf("ho ricevuto qualcosa\n");
-        printf("%d\n",wifi->receive(0,data,5));
-        printf("%s\n",data);
-        greenLed::high();
-        greenLed::low();
-        usleep(2000000);
-        /*wifi->receive(0,data,1);
-        printf("Received data: %d",*data);
-        greenLed::high();
-        usleep(1000000);
-        greenLed::low();
-        num_step = wifi->receive();
-        if (trasmission){
-            wifi->transmit(num_step);
-        }
-        else{
-            wifi->receive();
-        }
-    */
-    }
+    nRF24L01P *my_nrf24l01p = new nRF24L01P();
+
+    char rxData[TRANSFER_SIZE];
+    int rxDataCnt = 4;
+ 
+    my_nrf24l01p->powerUp();
+ 
+    // Display the (default) setup of the nRF24L01+ chip
+    printf( "nRF24L01+ Frequency    : %d MHz\r\n",  my_nrf24l01p->getRfFrequency() );
+    printf( "nRF24L01+ Output power : %d dBm\r\n",  my_nrf24l01p->getRfOutputPower() );
+    printf( "nRF24L01+ Data Rate    : %d kbps\r\n", my_nrf24l01p->getAirDataRate() );
+    printf( "nRF24L01+ TX Address   : 0x%010llX\r\n", my_nrf24l01p->getTxAddress() );
+    printf( "nRF24L01+ RX Address   : 0x%010llX\r\n", my_nrf24l01p->getRxAddress() );
+ 
+    printf( "Type keys to test transfers:\r\n  (transfers are grouped into %d characters)\r\n", TRANSFER_SIZE );
+ 
+     my_nrf24l01p->setTransferSize( TRANSFER_SIZE );
+ 
+    my_nrf24l01p->setReceiveMode();
+    my_nrf24l01p->enable();
+    while(1){
+        waitForModule();
+        rxDataCnt = my_nrf24l01p->read( NRF24L01P_PIPE_P0, rxData, sizeof( rxData ) );
+        for ( int i = 0; rxDataCnt > 0; rxDataCnt--, i++ ) {
+ 
+                printf("%c\n", rxData[i] );
+            }
     
-   
-    printf("Hello world, write your application here\n");
-    
+}
 }

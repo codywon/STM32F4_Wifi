@@ -37,10 +37,11 @@ spi_driver::spi_driver(const spi_driver& orig) {
 spi_driver::~spi_driver() {
 }
 
-void spi_driver::spi_write(int command){
+int spi_driver::write(int command){
     SPI2->DR = command;
     while((SPI2->SR & SPI_SR_RXNE)==0); 
     command=SPI2->DR;/*dummy read viene usato perazzerare il bit RXNE */
+    return command;
 }
 
 int spi_driver::spi_Receive(){

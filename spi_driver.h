@@ -13,7 +13,7 @@ public:
     spi_driver();
     spi_driver(const spi_driver& orig);
     virtual ~spi_driver();
-    void spi_write(int command);
+    int write(int command);
     int spi_Receive();
 private:
 
