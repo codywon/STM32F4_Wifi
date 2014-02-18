@@ -31,7 +31,7 @@ public:
     unsigned long long get_rx_address(int pipe);
     int get_register_status();
     void reset_interrupt();
-    bool packet_in_pipe(int pipe);
+    bool packet_in_pipe();
 
 
 

@@ -348,13 +348,9 @@ int  nRF24L01P::get_register(int registro){
     return result;   
 }
 
-bool nRF24L01P::packet_in_pipe(int pipe){
-    if ((pipe<NRF24L01P_PIPE_NO_0) || (pipe> NRF24L01P_PIPE_NO_5)){
-        return false;
-    }
-    //printf("Status register in packet_inpipe %\n",get_register_status());
+bool nRF24L01P::packet_in_pipe(){
+    int pipe = NRF24L01P_PIPE_NO_0;
     int status=get_register_status();
-    //& is bitwise (it returns 01001100) && is and (return 0 or 1))
     if((status & NRF24L01P_STATUS_DR_RX)&&((status & NRF24L01P_STATUS_RX_P_NO)>>1)==(pipe & 0x7)){
         return true;
     }
