@@ -20,7 +20,7 @@ public:
     void set_transmit_mode();
     void set_receive_mode();
     int transmit(int count, char* data);
-    int receive(int pipe,char *data,int count);
+    int receive(char *data,int count);
     int get_frequency();
     int get_air_data_rate(); 
     int get_output_power();
@@ -28,10 +28,10 @@ public:
     void disable_auto_ack();
     void disable_auto_retransmit();
     unsigned long long get_tx_address();
-    unsigned long long get_rx_address(int pipe);
+    unsigned long long get_rx_address_pipe0();
     int get_register_status();
     void reset_interrupt();
-    bool packet_in_pipe(int pipe);
+    bool packet_in_pipe0();
 
 
 
@@ -51,7 +51,7 @@ private:
     void flush_tx();
     void set_crc_width(int width);
     void set_tx_address(unsigned long long address, int width);
-    void set_rx_address(unsigned long long address, int width, int pipe);
+    void set_rx_address_pipe0(unsigned long long address, int width);
     void set_transfer_size(int size);
     int mode;
     spi_driver *spi;
