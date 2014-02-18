@@ -238,12 +238,7 @@ void nRF24L01P::set_transmit_mode(){
     mode = NRF24L01P_TX_MODE;
     
 }
-/**
- * function allowes to transmit a data with the nRF24L01P module
- * @param count dimension of data
- * @param data data to send
- * @return number of bits sent
- */
+
 int nRF24L01P::transmit(int count, char* data){
     int old_ce = CE::value();
     if( count < 0)
@@ -287,17 +282,16 @@ int nRF24L01P::receive(char *data,int count){
         count= NRF24L01P_RX_BUFFER_SIZE;
     }
     
-        CS::low();
-        spi->spi_write(NRF24L01P_R_RX_PAY);
+   CS::low();
+   spi->spi_write(NRF24L01P_R_RX_PAY);
         
-        for(int i=0;i<count;i++){
-             *data = spi->spi_Receive();
-              data++;
-        }
-        CS::low();
-        return count;
+   for(int i=0;i<count;i++){
+        *data = spi->spi_Receive();
+         data++;
+   }
+   CS::low();
+   return count;
   
-    return 0;
 }
 
 void nRF24L01P::CE_restore(int old_ce){
@@ -316,11 +310,7 @@ void nRF24L01P::CE_disable(){
     CE::low();
 }
 
-/**
- * function allowes to set a register to a particular value
- * @param addr_registro address of the register
- * @param data_registro data to set the register
- */
+
 void nRF24L01P::set_register(int addr_register,int data_register){
         int old_ce =CE::value();  //save the CE value    
         CE_disable(); //in order to change value of register the module has to be in StandBy1 mode
@@ -351,10 +341,7 @@ bool nRF24L01P::packet_in_pipe0(){
     return false;
 }
 
-/**
- * Function to get the status register
- * @return status register
- */
+
 int nRF24L01P::get_register_status(){
     CS::low();
     int status = spi->spi_Receive();    //the module send status bit every time is sent a command
@@ -551,6 +538,7 @@ void nRF24L01P::disable_auto_ack(){
     set_register(NRF24L01P_REG_AA, NRF24L01P_EN_AA_NONE);// deactivate wait for ack*/
 }
 
+
 void nRF24L01P::disable_auto_retransmit() {
  
     set_register(NRF24L01P_REG_SETUP_RETR, NRF24L01P_SETUP_RETR_NONE);
@@ -560,9 +548,7 @@ void nRF24L01P::disable_auto_retransmit() {
 unsigned long long nRF24L01P::get_tx_address() {
  
     int setupAw = get_register(NRF24L01P_REG_SETUP_AW) & NRF24L01P_SETUP_AW_AW_MASK;
- 
     int width;
- 
     switch ( setupAw ) {
  
         case NRF24L01P_SETUP_AW_AW_3BYTE:
