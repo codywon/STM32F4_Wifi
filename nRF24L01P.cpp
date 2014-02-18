@@ -1,38 +1,24 @@
-/* 
+/**
  * File:   nRF24L01P.cpp
- * Author: r0rshark
- * 
- * Created on 3 gennaio 2014, 17.22
+ *  \brief     This is the implementation of the functions defined in  nRF24L01P.h.
+ *  \author    Andrea Corna
+ *  \author    Lorenzo Fontana
+ *  \version   1.0
+ *  \date      03/01/2014
  */
 
 #include "nRF24L01P.h"
 #include <cstdio>
 #include "miosix.h"
 
-//NRF24L01P Macro 
-//rf register 
- 
-#define NRF24L01P_RF_HIGH_BIT                   (1 << 3)
-#define NRF24L01P_RF_LOW_BIT                    (1 << 5)
-#define NRF24L01P_RF_MASK                       (NRF24L01P_RF_LOW_BIT| NRF24L01P_RF_HIGH_BIT)
-#define NRF24L01P_RF_250KBPS                    (NRF24L01P_RF_LOW_BIT)
-#define NRF24L01P_RF_1MBPS                      (0)
-#define NRF24L01P_RF_2MBPS                      (NRF24L01P_RF_HIGH_BIT)
-
-//pipe number for multiceiver
+/*Pipe 0 macro*/
 #define NRF24L01P_PIPE_NO_0                     0
-#define NRF24L01P_PIPE_NO_1                     1
-#define NRF24L01P_PIPE_NO_2                     2
-#define NRF24L01P_PIPE_NO_3                     3
-#define NRF24L01P_PIPE_NO_4                     4
-#define NRF24L01P_PIPE_NO_5                     5
-#define NRF24L01P_REG_RX_PW_P0                  0x11
 
-//size buffers
+/*Receive buffer size macro*/
 #define NRF24L01P_RX_BUFFER_SIZE                32
 
 
-//Command
+/*Command MACRO*/
 #define NRF24L01P_CMD_RD_REG                    0x00
 #define NRF24L01P_CMD_WT_REG                    0x20
 #define NRF24L01P_CMD_WR_TX_PAYLOAD             0xa0
@@ -40,26 +26,38 @@
 #define NRF24L01P_R_RX_PAY                      0x61
 #define NRF24L01P_SPI_CMD_FLUSH_TX              0xe1
 
-//bitmask and register address
-#define NRF24LO1P_REG_ADDR_BITMASK              0x1f
+/*Module registers macro*/
 #define NRF24L01P_REG_CONF                      0x00
-#define NRF24L01P_REG_STATUS                    0x07
+#define NRF24L01P_REG_AA                        0x01
+#define NRF24L01P_REG_EN_RXADDR                 0x02
+#define NRF24L01P_REG_SETUP_AW                  0x03
+#define NRF24L01P_REG_SETUP_RETR                0x04
 #define NRF24L01P_REG_RF_CH                     0x05
 #define NRF24L01P_REG_RF_SETUP                  0x06
-#define NRF24L01P_REG_AA                        0x01
-#define NRF24L01P_REG_SETUP_AW                  0x03
+#define NRF24L01P_REG_STATUS                    0x07
+#define NRF24L01P_REG_RPD                       0x09
+#define NRF24L01P_REG_RX_ADDR_P0                0x0a
 #define NRF24L01P_REG_TX_ADDR                   0x10
 #define NRF24L01P_REG_RX_PW_P0                  0x11
-#define NRF24L01P_REG_RX_ADDR_P0                0x0a
-#define NRF24L01P_REG_SETUP_RETR                0x04
-#define NRF24L01P_REG_EN_RXADDR                 0x02
-#define NRF24L01P_CONFIG_MASK_TX                (1<<5)
+#define NRF24LO1P_REG_ADDR_BITMASK              0x1f
 
+/*Configuration Config register*/
+#define NRF24L01P_CONFIG_MASK_TX                (1<<5)
 #define NRF24L01P_PRIM_RX                       (1<<0)
 #define NRF24L01P_PWR_UP                        (1<<1)
+
+/*Macro of Status Register*/
 #define NRF24L01P_STATUS_TX_DS                  (1<<5)
 #define NRF24L01P_STATUS_MAX_RT                 (1<<4)
 #define NRF24L01P_STATUS_RX_DR                  (1<<6)
+#define NRF24L01P_STATUS_RX_P_NO                (0x7<<1)
+
+/*Configuration RF register*/
+#define NRF24L01P_RX_FIFO_EMPTY                 (7<<1)
+#define NRF24L01P_RF_MASK                       ((1 << 5)| (1<<3))
+#define NRF24L01P_RF_250KBPS                    (1 << 5)
+#define NRF24L01P_RF_1MBPS                      (0)
+#define NRF24L01P_RF_2MBPS                      (1 << 3)
 #define NRF24L01P_RF_SETUP_RF_PWR_MASK          (0x3<<1)
 #define NRF24L01P_RF_SETUP_RF_DR_MASK           (40<<0)
 #define NRF24L01P_RF_SETUP_PWR_0DBM             (0x3<<1)
@@ -69,11 +67,8 @@
 #define NRF24L01P_RF_DR_250KBPS                 (1<<5)
 #define NRF24L01P_RF_DR_1MBPS                   (0)
 #define NRF24L01P_RF_DR_2MBPS                   (1<<3)
-#define NRF24L01P_STATUS_DR_RX                  (1<<6)         //set if data register full write 1 to clear
-#define NRF24L01P_STATUS_RX_P_NO                (0x7<<1)
-#define NRF24L01P_ENAA_P0                       (1<<0)
-#define NRF24L01P_RX_FIFO_EMPTY                 (7<<1)
-//CRC
+
+/*Configuration CRC*/
 #define NRF24L01P_CONFIG_CRC0                   (1<<2)
 #define NRF24L01P_CONFIG_EN_CRC                 (1<<3)
 #define NRF24L01P_CONFIG_CRC_MASK       (NRF24L01P_CONFIG_EN_CRC| NRF24L01P_CONFIG_CRC0)
@@ -81,15 +76,15 @@
 #define NRF24L01P_CONFIG_CRC_8BIT       (NRF24L01P_CONFIG_EN_CRC)
 #define NRF24L01P_CONFIG_CRC_16BIT      (NRF24L01P_CONFIG_EN_CRC|NRF24L01P_CONFIG_CRC0)
 
-
-// SETUP_AW register:
+/*Configuration SETUP AW register*/
 #define NRF24L01P_SETUP_AW_AW_MASK              (0x3<<0)
 #define NRF24L01P_SETUP_AW_AW_3BYTE             (0x1<<0)
 #define NRF24L01P_SETUP_AW_AW_4BYTE             (0x2<<0)
 #define NRF24L01P_SETUP_AW_AW_5BYTE             (0x3<<0)
-//time
+
+/*Time macro*/
 #define NRF24L01P_TPD2STBY                      2000  //2mS
-#define NRF24L01P_TPECE2CSN                     4  //4uS
+#define NRF24L01P_TPECE2CSN                     4     //4uS
 #define NRF24L01P_TPECETR                       10
 #define NRF24L01P_TPRCV                         130
 
@@ -117,10 +112,13 @@
 #define NRF24L01P_MIN_RF_FREQUENCY              2400
 #define NRF24L01P_MAX_RF_FREQUENCY              2525
 
-
+/*Macro disable auto ack*/
 #define NRF24L01P_EN_AA_NONE                    0
-#define NRF24L01P_EN_RXADDR_NONE                0
+
+/*Macro disable auto retransmit*/
 #define NRF24L01P_SETUP_RETR_NONE               0
+
+/*Macro default address and width*/
 #define NRF24L01P_ADDRESS_DEFAULT       ((unsigned long long) 0xE7E7E7E7E7 )
 #define NRF24L01P_ADDRESS_DEFAULT_WIDTH         5
 
@@ -334,7 +332,7 @@ int  nRF24L01P::get_register(int reg){
 bool nRF24L01P::packet_in_pipe0(){
     int pipe = NRF24L01P_PIPE_NO_0;
     int status=get_register_status();
-    if((status & NRF24L01P_STATUS_DR_RX)&&((status & NRF24L01P_STATUS_RX_P_NO)>>1)==(pipe & 0x7)){
+    if((status & NRF24L01P_STATUS_RX_DR)&&((status & NRF24L01P_STATUS_RX_P_NO)>>1)==(pipe & 0x7)){
         return true;
     }
     return false;
@@ -767,4 +765,8 @@ void nRF24L01P::reset_interrupt(){
     status |= NRF24L01P_STATUS_RX_DR;
     set_register(NRF24L01P_REG_STATUS, status);
     
+}
+
+int nRF24L01P::get_rpd_status(){
+    return get_register(NRF24L01P_REG_RPD);
 }

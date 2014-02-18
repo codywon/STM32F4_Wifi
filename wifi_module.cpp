@@ -104,7 +104,6 @@ void *wifi_receive(void *arg){
        waitForModule();
        pthread_mutex_lock(&spi);
        wifi->set_receive_mode();
-
        while(wifi->packet_in_pipe0()){
                  orangeLed::low();
                  wifi->reset_interrupt();
