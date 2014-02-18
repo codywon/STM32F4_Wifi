@@ -152,15 +152,13 @@ nRF24L01P::nRF24L01P() {
     power_down();
     setup_Gpio();
     clear_pending_interrupt();
-    set_register(NRF24L01P_REG_EN_RXADDR, NRF24L01P_EN_RXADDR_NONE);
-    set_register(NRF24L01P_REG_RX_PW_P0,32);
     set_tx_address(5);
-    disable_tx_interrupt();
     set_crc_width(NRF24L01P_CRC_8_BIT);
     set_tx_address(NRF24L01P_ADDRESS_DEFAULT, NRF24L01P_ADDRESS_DEFAULT_WIDTH);
     set_rx_address(NRF24L01P_ADDRESS_DEFAULT, NRF24L01P_ADDRESS_DEFAULT_WIDTH,NRF24L01P_PIPE_NO_0);
     disable_auto_ack();
     disable_auto_retransmit();
+    disable_tx_interrupt();
     set_transfer_size(32);
     printf("Status %d\n",get_register_status());
     printf("Output power %d\n",get_output_power());
@@ -285,16 +283,12 @@ int nRF24L01P::transmit(int count, char* data){
     
 }
 
-int nRF24L01P::receive(int pipe,char *data,int count){
+int nRF24L01P::receive(char *data,int count){
     if(mode!=NRF24L01P_RX_MODE){
         printf("Before receive set up in receive_mode\n");
         return -1;
     }
-    if (pipe<NRF24L01P_PIPE_NO_0 || pipe>NRF24L01P_PIPE_NO_5){
-        printf("Error number of pipe must be between 0 and 5 not %d\n",pipe);
-        return -1;
-    }
-    if (count<=0) {
+   if (count<=0) {
         return 0;
     }
     if (count>NRF24L01P_RX_BUFFER_SIZE){

@@ -108,7 +108,7 @@ void *wifi_receive(void *arg){
        while(wifi->packet_in_pipe(0)){
                  orangeLed::low();
                  wifi->reset_interrupt();
-                 wifi->receive(0,data,BUFFER_CELL_SIZE);
+                 wifi->receive(data,BUFFER_CELL_SIZE);
                  printf("<RECEIVE> %s\n",data);
                  pthread_mutex_lock(&buff_rx);
                  if(counter_rx<BUFFER_RECEIVE_SIZE){

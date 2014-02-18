@@ -20,7 +20,7 @@ public:
     void set_transmit_mode();
     void set_receive_mode();
     int transmit(int count, char* data);
-    int receive(int pipe,char *data,int count);
+    int receive(char *data,int count);
     int get_frequency();
     int get_air_data_rate(); 
     int get_output_power();
