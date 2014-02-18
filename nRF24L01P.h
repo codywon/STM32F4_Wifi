@@ -136,6 +136,12 @@ public:
      * @return the value of the status register
      */
     int get_register_status();
+    
+    /**
+     * The function returns the rpd bit
+     * @return - rpd bit value
+     */
+    int get_rpd_status();
    
     /**
      * THe function resets the rx interrupt bit
