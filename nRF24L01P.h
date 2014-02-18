@@ -28,7 +28,7 @@ public:
     void disable_auto_ack();
     void disable_auto_retransmit();
     unsigned long long get_tx_address();
-    unsigned long long get_rx_address(int pipe);
+    unsigned long long get_rx_address();
     int get_register_status();
     void reset_interrupt();
     bool packet_in_pipe();

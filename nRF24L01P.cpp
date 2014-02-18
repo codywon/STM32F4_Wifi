@@ -166,7 +166,7 @@ nRF24L01P::nRF24L01P() {
     printf("Crc %d\n",get_crc_width());
     printf("SETUP_AW %d\n",get_register(NRF24L01P_REG_SETUP_AW));
     printf("tx register 0x%010llX\n",get_tx_address());
-    printf("rx address 0x%010llX\n",get_rx_address(NRF24L01P_PIPE_NO_0));
+    printf("rx address 0x%010llX\n",get_rx_address());
         
 }
 
@@ -614,20 +614,13 @@ unsigned long long nRF24L01P::get_tx_address() {
     return address;
 }
 
-unsigned long long nRF24L01P::get_rx_address(int pipe) {
+unsigned long long nRF24L01P::get_rx_address() {
  
-    if ( ( pipe < NRF24L01P_PIPE_NO_0 ) || ( pipe > NRF24L01P_PIPE_NO_5 ) ) {
- 
-        printf( "Invalid setRxAddress pipe number %d\n", pipe );
-        return 0;
- 
-    }
+    int pipe = NRF24L01P_PIPE_NO_0;
  
     int width;
  
-    if ( ( pipe == NRF24L01P_PIPE_NO_0 ) || ( pipe == NRF24L01P_PIPE_NO_1 ) ) {
- 
-        int setupAw = get_register(NRF24L01P_REG_SETUP_AW) & NRF24L01P_SETUP_AW_AW_MASK;
+    int setupAw = get_register(NRF24L01P_REG_SETUP_AW) & NRF24L01P_SETUP_AW_AW_MASK;
  
         switch ( setupAw ) {
  
@@ -649,12 +642,7 @@ unsigned long long nRF24L01P::get_rx_address(int pipe) {
  
         }
  
-    } else {
- 
-        width = 1;
- 
-    }
- 
+  
     int rxAddrPxRegister = NRF24L01P_REG_RX_ADDR_P0 + ( pipe - NRF24L01P_PIPE_NO_0 );
  
     int cn = (NRF24L01P_CMD_RD_REG | (rxAddrPxRegister & NRF24LO1P_REG_ADDR_BITMASK));
@@ -675,12 +663,6 @@ unsigned long long nRF24L01P::get_rx_address(int pipe) {
     }
  
     CS::high();
- 
-    if ( !( ( pipe == NRF24L01P_PIPE_NO_0 ) || ( pipe == NRF24L01P_PIPE_NO_1 ) ) ) {
- 
-        address |= ( get_rx_address(NRF24L01P_PIPE_NO_1) & ~((unsigned long long) 0xFF) );
- 
-    }
  
     return address;
  
