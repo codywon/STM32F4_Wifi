@@ -44,16 +44,75 @@ public:
     
 
 private:
+    /**
+     * The method reset all interrupt bits
+     */
     void clear_pending_interrupt();
+    
+    /**
+     * The function set high CE gpio in order to communicate to module to accept the
+     * configuration given by spi lines.
+     */
     void CE_enable();
+    
+    /**
+     * The function set low CE gpio in order to start to communicate the new configuration 
+     * to the module.
+     */
     void CE_disable();
-    void set_register(int addr_registro,int data_registro);
-    int get_register(int registro);
+    
+    /**
+     * The function allowes us to set a register with a specific value
+     * @param addr_register - address of the register to set
+     * @param data_register - data to set into the register
+     */
+    void set_register(int addr_register,int data_register);
+    
+    /**
+     * The function return the data of the register
+     * @param reg - the register witch we want to know the data
+     * @return data of the register
+     */
+    int get_register(int reg);
+    
+    /**
+     * The function restore the old value of the CE gpio
+     * @param old_ce - old value
+     */
     void CE_restore(int old_ce);
+    
+    /**
+     * The function setup all the gpio in order to create a spi communication beetween the board and the module.
+     * We use:
+     * - GPIOB 11 CE;
+     * - GPIOB 12 CS;
+     * - GPIOB 13 SCK;
+     * - GPIOB 14 MISO;
+     * - GPIOB 15 MOSI;
+     * - GPIOA 1 IRQ;
+     * We use the SPI2 interface
+     */
     void setup_Gpio();
+    
     void flush_tx();
+    
+    
     int mode;
+    /**
+     * Driver spi variable
+     */
     spi_driver *spi;
+    
+    /**
+     * Enums of the possibly states of the module
+     */
+    typedef enum {
+        NRF24L01P_UNKNOWN_MODE,
+        NRF24L01P_POWER_DOWN_MODE,
+        NRF24L01P_STANDBY_MODE,
+        NRF24L01P_RX_MODE,
+        NRF24L01P_TX_MODE,
+    } NRF24L01P_mode;   
 
 };
 

@@ -125,15 +125,7 @@
 #define NRF24L01P_ADDRESS_DEFAULT_WIDTH         5
 
 #define NRF24L01P_RX_PW_Px_MASK                 0x3F
-
-
-typedef enum {
-    NRF24L01P_UNKNOWN_MODE,
-    NRF24L01P_POWER_DOWN_MODE,
-    NRF24L01P_STANDBY_MODE,
-    NRF24L01P_RX_MODE,
-    NRF24L01P_TX_MODE,
-} NRF24L01P_mode;       
+    
 
 using namespace miosix;
 
@@ -329,19 +321,19 @@ void nRF24L01P::CE_disable(){
  * @param addr_registro address of the register
  * @param data_registro data to set the register
  */
-void nRF24L01P::set_register(int addr_registro,int data_registro){
+void nRF24L01P::set_register(int addr_register,int data_register){
         int old_ce =CE::value();  //save the CE value    
         CE_disable(); //in order to change value of register the module has to be in StandBy1 mode
         CS::low();
-        spi->spi_write(NRF24L01P_CMD_WT_REG |(addr_registro & NRF24LO1P_REG_ADDR_BITMASK)); //command to write the at correct address of register
-        spi->spi_write(data_registro & NRF24L01P_CMD_NOP);    //data used to set the register
+        spi->spi_write(NRF24L01P_CMD_WT_REG |(addr_register & NRF24LO1P_REG_ADDR_BITMASK)); //command to write the at correct address of register
+        spi->spi_write(data_register & NRF24L01P_CMD_NOP);    //data used to set the register
         CS::high();
         CE_restore(old_ce);
 
 }
 
-int  nRF24L01P::get_register(int registro){
-    int command = NRF24L01P_CMD_RD_REG | (registro & NRF24LO1P_REG_ADDR_BITMASK);
+int  nRF24L01P::get_register(int reg){
+    int command = NRF24L01P_CMD_RD_REG | (reg & NRF24LO1P_REG_ADDR_BITMASK);
     int result;
     CS::low();
     spi->spi_write(command);   
