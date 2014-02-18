@@ -144,7 +144,6 @@ nRF24L01P::nRF24L01P() {
     power_down();
     setup_Gpio();
     clear_pending_interrupt();
-    set_tx_address(5);
     set_crc_width(NRF24L01P_CRC_8_BIT);
     set_tx_address(NRF24L01P_ADDRESS_DEFAULT, NRF24L01P_ADDRESS_DEFAULT_WIDTH);
     set_rx_address_pipe0(NRF24L01P_ADDRESS_DEFAULT, NRF24L01P_ADDRESS_DEFAULT_WIDTH);
@@ -493,7 +492,7 @@ int nRF24L01P::get_crc_width() {
 }
 
 
-void nRF24L01P::set_tx_address(int number){
+void nRF24L01P::set_tx_num_bit(int number){
     int num_bit = number -2;
     set_register(NRF24L01P_REG_SETUP_AW, num_bit);
 }

@@ -12,26 +12,123 @@
 
 class nRF24L01P {
 public:
+    
+    /**
+     * Default constructor. In this the module is configured with default options
+     */
     nRF24L01P();
+    
     nRF24L01P(const nRF24L01P& orig);
+    
+    /**
+     * Destructor
+     */
     virtual ~nRF24L01P();    
+    
+    /**
+     * The function powers up the module and flushes tx queue
+     */
     void power_up();
+    
+    /**
+     * The function powers down the module
+     */
     void power_down();
+    
+    /**
+     * The function sets the module into transmit mode
+     */
     void set_transmit_mode();
+    
+    /**
+     * The function sets the module into receive mode
+     */
     void set_receive_mode();
+    
+    /**
+     * The function configures the crc width
+     * @param width - width of the crc. Correct Values: 0, 8 or 16
+     */
     void set_crc_width(int width);
+    
+    /**
+     * The function sets the tx address
+     * @param address - value of the address to use 
+     * @param width - address field width
+     */
     void set_tx_address(unsigned long long address, int width);
+    
+    /**
+     * The function set the rx address
+     * @param address - value of the address to use
+     * @param width - address field width
+     */
     void set_rx_address_pipe0(unsigned long long address, int width);
+    
+    /**
+     * The function sets the frequency of the channel used by the module
+     * @param frequency - frequency value, between 2400 and 2525
+     */
     void set_frequency(int frequency);
+    
+    /**
+     * The function sets the signal power output
+     * @param power - value 0, -6, -12, -18
+     */
     void set_power_output(int power);
+    
+    /**
+     * The function sets the data rate
+     * @param rate - value 250, 1000 or 2000
+     */
     void set_air_data_rate(int rate);
-    void set_tx_address(int number);
+   
+    /**
+     * The function sets the address field width
+     * @param number - possible values 3, 4 or 5
+     */
+    void set_tx_num_bit(int number);
+    
+    /**
+     * The function sets the dimension of the payload to be sent to other boards
+     * @param size - dimension of the payload, value between 0 and 32
+     */
     void set_transfer_size(int size);
+   
+    /**
+     * The function returns the frequency value configured in the module
+     * @return a value between 2400 and 2525 MHz
+     */
     int get_frequency();
+    
+    /**
+     * The function returns the data rate value configured in the module.
+     * @return 250 if it's 250 KBPS, 1000 if it's 1 MBPS, 2000 if it's 2 MBPS
+     */
     int get_air_data_rate(); 
+   
+    /**
+     * The function returns the output power value configured in the module
+     * @return   0 if it's 0 dB, -6 if it's -6 dB, -12 if it's -12 dB,, -18 if it's -18 dB
+     */
     int get_output_power();
+    
+    /**
+     * The function returns the crc width value configured in the module
+     * @return 0 if CRC = 0 , 8 if CRC is 8 bits, 16 if CRC is 16 bits
+     */
     int get_crc_width();
+    
+    /**
+     * The function return the tx address
+     * @return the tx address
+     */
     unsigned long long get_tx_address();
+    
+    /**
+     * The function return the rx address of pipe 0
+     * @return the address of pipe 0
+     */
     unsigned long long get_rx_address_pipe0();
     
     /**
