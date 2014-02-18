@@ -285,7 +285,7 @@ int nRF24L01P::transmit(int count, char* data){
 
 int nRF24L01P::receive(char *data,int count){
     if(mode!=NRF24L01P_RX_MODE){
-        printf("Before receive set up in receive_mode\n");
+        printf("Before receive setup module in receive_mode\n");
         return -1;
     }
    if (count<=0) {
@@ -309,13 +309,15 @@ int nRF24L01P::receive(char *data,int count){
 }
 
 void nRF24L01P::CE_restore(int old_ce){
-    old_ce ? CE::high():CE::low();      //wifi_module.cpp:75:34: error: no matching function for call to 'nRF24L01P::receive()'restore old ce value
-    usleep(NRF24L01P_TPECE2CSN);    //sleep to apply ce value change
+    old_ce ? CE::high():CE::low();    
+    //sleep to apply ce value change
+    usleep(NRF24L01P_TPECE2CSN);    
 }
 
 void nRF24L01P::CE_enable(){
     CE::high();
-    usleep(NRF24L01P_TPECE2CSN);        //sleep to apply ce value change
+    //sleep to apply ce value change
+    usleep(NRF24L01P_TPECE2CSN);       
 }
 
 void nRF24L01P::CE_disable(){
@@ -403,7 +405,6 @@ int nRF24L01P::get_frequency(){
 void nRF24L01P::set_power_output(int power){
     
     int rf_config = get_register(NRF24L01P_REG_RF_SETUP) & ~NRF24L01P_RF_SETUP_RF_PWR_MASK; /*get rf config except for the power bits*/
-    printf("Start set power config %d\n", rf_config);
     switch (power){                                     /*set the power*/
         case NRF24L01P_TX_PWR_ZERO_DB:
             rf_config |= NRF24L01P_RF_SETUP_PWR_0DBM;
@@ -422,11 +423,9 @@ void nRF24L01P::set_power_output(int power){
             return;
     }
     set_register(NRF24L01P_REG_RF_SETUP, rf_config);    /*set the rf setup register*/
-    printf("End set power config %d\n",rf_config);
 }
 
 void nRF24L01P::set_air_data_rate(int rate){
-    printf("Start set air rate\n");
     int air_config = get_register(NRF24L01P_REG_RF_SETUP) & ~NRF24L01P_RF_SETUP_RF_DR_MASK; /*get rf config except rf_dr_low and rf_dr_high*/
     switch (rate){
         case NRF24L01P_DATARATE_250KBPS:
@@ -587,7 +586,7 @@ unsigned long long nRF24L01P::get_tx_address() {
             break;
  
         default:
-            printf( "Unknown getTxAddress width value %d\n", setupAw );
+            printf( "Unknown get_tx_address width value %d\n", setupAw );
             return 0;
  
     }
@@ -637,7 +636,7 @@ unsigned long long nRF24L01P::get_rx_address_pipe0() {
                 break;
  
             default:
-                printf( "Unknown getRxAddress width value %d\n", setupAw );
+                printf( "Unknown get_rx_address width value %d\n", setupAw );
                 return 0;
  
         }
@@ -687,7 +686,7 @@ void nRF24L01P::set_tx_address(unsigned long long address, int width) {
             break;
  
         default:
-            printf( "Invalid setTxAddress width setting %d\n", width );
+            printf( "Invalid set_tx_address width setting %d\n", width );
             return;
  
     }
@@ -735,7 +734,7 @@ void nRF24L01P::set_rx_address_pipe0(unsigned long long address, int width) {
                 break;
     
             default:
-                printf( "Invalid setRxAddress width setting %d\n", width );
+                printf( "Invalid set_rx_address width setting %d\n", width );
                 return;
     
         }
