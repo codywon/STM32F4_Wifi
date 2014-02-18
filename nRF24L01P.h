@@ -51,7 +51,7 @@ private:
     void flush_tx();
     void set_crc_width(int width);
     void set_tx_address(unsigned long long address, int width);
-    void set_rx_address(unsigned long long address, int width, int pipe);
+    void set_rx_address(unsigned long long address, int width);
     void set_transfer_size(int size);
     int mode;
     spi_driver *spi;
