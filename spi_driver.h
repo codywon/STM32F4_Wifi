@@ -27,13 +27,13 @@ public:
      * Method to write a command with the spi 
      * @param command - command's integer coding
      */
-    void spi_write(int command);
+    void write(int command);
     
     /**
      * This method uses a dummy write in order to catch the slave's status register
      * @return status register integer coding
      */
-    int spi_Receive();
+    int read();
 private:
 
 };

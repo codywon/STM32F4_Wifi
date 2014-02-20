@@ -4,7 +4,7 @@
 #include "nRF24L01P.h"
 #include <miosix/kernel/scheduler/scheduler.h>
 
-#define BUFFER_TRANSMIT_SIZE            960
+#define BUFFER_TRANSMIT_SIZE            32
 #define BUFFER_CELL_SIZE                32
 #define BUFFER_NUMBER_CELLS             3
 #define BUFFER_RECEIVE_SIZE             960

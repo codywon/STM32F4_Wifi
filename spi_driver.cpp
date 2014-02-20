@@ -37,14 +37,14 @@ spi_driver::spi_driver(const spi_driver& orig) {
 spi_driver::~spi_driver() {
 }
 
-void spi_driver::spi_write(int command){
+void spi_driver::write(int command){
     SPI2->DR = command;
     while((SPI2->SR & SPI_SR_RXNE)==0); 
     /*dummy read in order to reset RXNE bit*/
     command=SPI2->DR;
 }
 
-int  spi_driver::spi_Receive(){
+int  spi_driver::read(){
     /*dummy write in order to receive a byte from slave*/
      SPI2->DR = 0xff;             
      while((SPI2->SR & SPI_SR_RXNE)==0);
