@@ -13,8 +13,6 @@ int main()
 {
     char transmit[32];
     char received[960];
-    pthread_t wifi_thread;
-    pthread_t thread_receive;
     init();
     while(1){
     
@@ -23,8 +21,6 @@ int main()
         receive(received);
 
     }
-    pthread_join(wifi_thread,NULL);
-    pthread_join(thread_receive,NULL);
-    
+     
        
 }
