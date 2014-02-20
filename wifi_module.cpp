@@ -24,6 +24,10 @@ static int counter_rx = 0;
 /*Wireless Module*/
 static nRF24L01P *wifi;
 
+/*Thread variables*/
+static pthread_t receive_thread;
+static pthread_t transmit_thread;
+
 /*Buffers and module mutex*/
 static pthread_mutex_t buff_tx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t buff_rx=PTHREAD_MUTEX_INITIALIZER;
@@ -186,5 +190,7 @@ void init(){
     wifi->set_receive_mode();
     configureModuleInterrupt();
     blueLed::high();
+    pthread_create(&transmit_thread,NULL,&wifi_transmit,NULL);
+    pthread_create(&receive_thread,NULL,&wifi_receive,NULL);
 
 }
