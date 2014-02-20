@@ -132,26 +132,34 @@ void *wifi_transmit(void *arg){
      char payload[BUFFER_CELL_SIZE];
     for(;;){
         greenLed::high();
-        usleep(5000000);
-        pthread_mutex_lock(&buff_tx);
-        if(counter_tx != 0){
-            for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
-                for(int i = 0;i< BUFFER_CELL_SIZE;i++){
-                    payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
-                    buffer_transmit[i+BUFFER_CELL_SIZE*j] = 0;
+        usleep(1000000);
+        pthread_mutex_lock(&spi);
+        wifi->set_receive_mode();
+        printf("rpd %d\n",wifi->get_rpd_status());
+        if(wifi->get_rpd_status() == 1){
+            printf("rpd dentro %d\n",wifi->get_rpd_status());
+            pthread_mutex_unlock(&spi);
+            pthread_mutex_lock(&buff_tx);
+            if(counter_tx != 0){
+                for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
+                    for(int i = 0;i< BUFFER_CELL_SIZE;i++){
+                        payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
+                        buffer_transmit[i+BUFFER_CELL_SIZE*j] = 0;
+                    }
+                    printf("<TRASMIT> %s\n",payload);
+                    pthread_mutex_lock(&spi);
+                    wifi->transmit(BUFFER_CELL_SIZE,payload);
+                    pthread_mutex_unlock(&spi);
+                    greenLed::low();
+                    usleep(400000);
+                    greenLed::high();
                 }
-                printf("<TRASMIT> %s\n",payload);
-                pthread_mutex_lock(&spi);
-                wifi->transmit(BUFFER_CELL_SIZE,payload);
-                pthread_mutex_unlock(&spi);
-                greenLed::low();
-                usleep(400000);
-                greenLed::high();
+                counter_tx = 0;
+
             }
-            counter_tx = 0;
-           
+            pthread_mutex_unlock(&buff_tx);
         }
-        pthread_mutex_unlock(&buff_tx);
+        pthread_mutex_unlock(&spi);
     }      
 }
 
