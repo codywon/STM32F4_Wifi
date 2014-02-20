@@ -28,6 +28,7 @@ static nRF24L01P *wifi;
 static pthread_mutex_t buff_tx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t buff_rx=PTHREAD_MUTEX_INITIALIZER;
 static pthread_mutex_t spi=PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t cond=PTHREAD_COND_INITIALIZER;
 
 /*Leds Gpio*/
 typedef Gpio<GPIOD_BASE,12> greenLed;
@@ -49,6 +50,7 @@ void send(char* payload){
     }
     buffer_transmit[i+counter_tx]='\0';
     counter_tx = counter_tx + BUFFER_CELL_SIZE;
+    pthread_cond_broadcast(&cond);
     pthread_mutex_unlock(&buff_tx);
 }
 
@@ -132,28 +134,29 @@ void *wifi_transmit(void *arg){
      char payload[BUFFER_CELL_SIZE];
     for(;;){
         greenLed::high();
-        usleep(5000000);
         pthread_mutex_lock(&buff_tx);
-        if(counter_tx != 0){
-            for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
-                for(int i = 0;i< BUFFER_CELL_SIZE;i++){
-                    payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
-                    buffer_transmit[i+BUFFER_CELL_SIZE*j] = 0;
-                }
-                printf("<TRASMIT> %s\n",payload);
-                pthread_mutex_lock(&spi);
-                wifi->transmit(BUFFER_CELL_SIZE,payload);
-                pthread_mutex_unlock(&spi);
-                greenLed::low();
-                usleep(400000);
-                greenLed::high();
+        while(counter_tx == 0)
+            pthread_cond_wait(&cond,&buff_tx);
+  
+        for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
+            for(int i = 0;i< BUFFER_CELL_SIZE;i++){
+                payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
+                buffer_transmit[i+BUFFER_CELL_SIZE*j] = 0;
             }
-            counter_tx = 0;
-           
+            printf("<TRASMIT> %s\n",payload);
+            pthread_mutex_lock(&spi);
+            wifi->transmit(BUFFER_CELL_SIZE,payload);
+            pthread_mutex_unlock(&spi);
+            greenLed::low();
+            usleep(400000);
+            greenLed::high();
         }
-        pthread_mutex_unlock(&buff_tx);
-    }      
-}
+        counter_tx = 0;
+        pthread_mutex_unlock(&buff_tx); 
+    }
+        
+}      
+
 
 
 void receive(char *payload){
