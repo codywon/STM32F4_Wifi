@@ -149,6 +149,7 @@ nRF24L01P::nRF24L01P() {
     disable_auto_retransmit();
     disable_tx_interrupt();
     set_transfer_size(32);
+    set_frequency(2500);
     printf("Status %d\n",get_register_status());
     printf("Output power %d\n",get_output_power());
     printf("Air data rate %d\n",get_air_data_rate());
@@ -237,7 +238,7 @@ void nRF24L01P::set_transmit_mode(){
 }
 
 int nRF24L01P::transmit(int count, char* data){
-    int old_ce = CE::value();
+    //int old_ce = CE::value();
     if( count < 0)
         return 0;
     if( count > NRF24L01P_TX_FIFO_SIZE)
@@ -245,12 +246,12 @@ int nRF24L01P::transmit(int count, char* data){
     CE_disable();
     set_register(NRF24L01P_REG_STATUS, NRF24L01P_STATUS_TX_DS); /*clear bit interrupt data sent tx fifo*/
     CS::low();
-    spi->spi_write(NRF24L01P_CMD_WR_TX_PAYLOAD); //command to start write from payload TX
+    spi->write(NRF24L01P_CMD_WR_TX_PAYLOAD); //command to start write from payload TX
     for( int i=0; i<count; i++){
-        spi->spi_write(*data++);
+        spi->write(*data++);
     }
     CS::high();
-    int old_mode = mode;
+    //int old_mode = mode;
     set_transmit_mode();
     CE::high();
     usleep(NRF24L01P_TPECETR);  
@@ -259,10 +260,10 @@ int nRF24L01P::transmit(int count, char* data){
         
     } //polling waiting for transfer complete
     set_register(NRF24L01P_REG_STATUS, NRF24L01P_STATUS_TX_DS); /*clear bit data sent tx fifo*/
-    if( old_mode == NRF24L01P_RX_MODE){              //reset the state before
+    //if( old_mode == NRF24L01P_RX_MODE){              //reset the state before
         set_receive_mode();
-    }
-    CE_restore(old_ce);
+    //}
+    //CE_restore(old_ce);
     return count;
     
 }
@@ -280,10 +281,10 @@ int nRF24L01P::receive(char *data,int count){
     }
     
    CS::low();
-   spi->spi_write(NRF24L01P_R_RX_PAY);
+   spi->write(NRF24L01P_R_RX_PAY);
         
    for(int i=0;i<count;i++){
-        *data = spi->spi_Receive();
+        *data = spi->read();
          data++;
    }
    CS::low();
@@ -312,8 +313,8 @@ void nRF24L01P::set_register(int addr_register,int data_register){
         int old_ce =CE::value();  //save the CE value    
         CE_disable(); //in order to change value of register the module has to be in StandBy1 mode
         CS::low();
-        spi->spi_write(NRF24L01P_CMD_WT_REG |(addr_register & NRF24LO1P_REG_ADDR_BITMASK)); //command to write the at correct address of register
-        spi->spi_write(data_register & NRF24L01P_CMD_NOP);    //data used to set the register
+        spi->write(NRF24L01P_CMD_WT_REG |(addr_register & NRF24LO1P_REG_ADDR_BITMASK)); //command to write the at correct address of register
+        spi->write(data_register & NRF24L01P_CMD_NOP);    //data used to set the register
         CS::high();
         CE_restore(old_ce);
 
@@ -323,8 +324,8 @@ int  nRF24L01P::get_register(int reg){
     int command = NRF24L01P_CMD_RD_REG | (reg & NRF24LO1P_REG_ADDR_BITMASK);
     int result;
     CS::low();
-    spi->spi_write(command);   
-    result = spi->spi_Receive();
+    spi->write(command);   
+    result = spi->read();
     CS::high();
     return result;   
 }
@@ -341,7 +342,7 @@ bool nRF24L01P::packet_in_pipe0(){
 
 int nRF24L01P::get_register_status(){
     CS::low();
-    int status = spi->spi_Receive();    //the module send status bit every time is sent a command
+    int status = spi->read();    //the module send status bit every time is sent a command
     CS::high();
     return status;
 }
@@ -498,7 +499,7 @@ void nRF24L01P::set_tx_num_bit(int number){
 void nRF24L01P::flush_tx()
 {
   CS::low();
-  spi->spi_write( NRF24L01P_SPI_CMD_FLUSH_TX  );  //svuoto coda TX
+  spi->write( NRF24L01P_SPI_CMD_FLUSH_TX  );  //svuoto coda TX
   CS::high();
   
 }
@@ -572,14 +573,14 @@ unsigned long long nRF24L01P::get_tx_address() {
  
     CS::low();
  
-    spi->spi_write(cn);
+    spi->write(cn);
  
     for ( int i=0; i<width; i++ ) {
  
         //
         // LSByte first
         //
-        address |= ( ( (unsigned long long)( spi->spi_Receive() & 0xFF ) ) << (i*8) );
+        address |= ( ( (unsigned long long)( spi->read() & 0xFF ) ) << (i*8) );
  
     }
  
@@ -625,14 +626,14 @@ unsigned long long nRF24L01P::get_rx_address_pipe0() {
  
     CS::low();
  
-    spi->spi_write(cn);
+    spi->write(cn);
  
     for ( int i=0; i<width; i++ ) {
  
         //
         // LSByte first
         //
-        address |= ( ( (unsigned long long)( spi->spi_Receive() & 0xFF ) ) << (i*8) );
+        address |= ( ( (unsigned long long)( spi->read() & 0xFF ) ) << (i*8) );
  
     }
  
@@ -672,14 +673,14 @@ void nRF24L01P::set_tx_address(unsigned long long address, int width) {
  
     CS::low();
  
-    spi->spi_write(cn);
+    spi->write(cn);
  
     while ( width-- > 0 ) {
  
         //
         // LSByte first
         //
-        spi->spi_write((int) (address & 0xFF));
+        spi->write((int) (address & 0xFF));
         address >>= 8;
  
     }
@@ -724,14 +725,14 @@ void nRF24L01P::set_rx_address_pipe0(unsigned long long address, int width) {
  
     CS::low();
  
-    spi->spi_write(cn);
+    spi->write(cn);
  
     while ( width-- > 0 ) {
  
         //
         // LSByte first
         //
-        spi->spi_write((int) (address & 0xFF));
+        spi->write((int) (address & 0xFF));
         address >>= 8;
  
     }
