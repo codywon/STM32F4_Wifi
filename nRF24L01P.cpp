@@ -237,7 +237,7 @@ void nRF24L01P::set_transmit_mode(){
 }
 
 int nRF24L01P::transmit(int count, char* data){
-    int old_ce = CE::value();
+    //int old_ce = CE::value();
     if( count < 0)
         return 0;
     if( count > NRF24L01P_TX_FIFO_SIZE)
@@ -250,7 +250,7 @@ int nRF24L01P::transmit(int count, char* data){
         spi->write(*data++);
     }
     CS::high();
-    int old_mode = mode;
+    //int old_mode = mode;
     set_transmit_mode();
     CE::high();
     usleep(NRF24L01P_TPECETR);  
@@ -259,10 +259,10 @@ int nRF24L01P::transmit(int count, char* data){
         
     } //polling waiting for transfer complete
     set_register(NRF24L01P_REG_STATUS, NRF24L01P_STATUS_TX_DS); /*clear bit data sent tx fifo*/
-    if( old_mode == NRF24L01P_RX_MODE){              //reset the state before
+    //if( old_mode == NRF24L01P_RX_MODE){              //reset the state before
         set_receive_mode();
-    }
-    CE_restore(old_ce);
+    //}
+    //CE_restore(old_ce);
     return count;
     
 }
