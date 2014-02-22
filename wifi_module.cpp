@@ -4,7 +4,7 @@
 #include "nRF24L01P.h"
 #include <miosix/kernel/scheduler/scheduler.h>
 
-#define BUFFER_TRANSMIT_SIZE            32
+#define BUFFER_TRANSMIT_SIZE            960
 #define BUFFER_CELL_SIZE                32
 #define BUFFER_NUMBER_CELLS             3
 #define BUFFER_RECEIVE_SIZE             960
@@ -42,8 +42,8 @@ typedef Gpio<GPIOD_BASE,13> orangeLed;
 
 
 void send(char* payload){
-    pthread_mutex_lock(&buff_tx);
     int i=0;
+    pthread_mutex_lock(&buff_tx);
     if(counter_tx == BUFFER_TRANSMIT_SIZE){
         //printf("Trasmit buffer is full\n");
         //pthread_mutex_unlock(&buff_tx);
@@ -116,7 +116,11 @@ void *wifi_receive(void *arg){
                  wifi->reset_interrupt();
                  wifi->receive(data,BUFFER_CELL_SIZE);
                  printf("<RECEIVE> %s\n",data);
-                 pthread_mutex_lock(&buff_rx);
+                 int steps = atoi(data);
+                 if(steps != 0){
+                     //qua va il codice per chiamare il pedometro
+                     printf("Chiamo il pedometro perchè ho ricevuto %d passi\n",steps);
+                 }pthread_mutex_lock(&buff_rx);
                  if(counter_rx<BUFFER_RECEIVE_SIZE){
                         for(int i=0;i<BUFFER_CELL_SIZE;i++){
                                 buffer_receive[i+counter_rx] = data[i];
