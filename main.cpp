@@ -1,7 +1,7 @@
 
 #include <cstdio>
 #include "miosix.h"
-#include "wifi_module.h"
+#include "./nrf24l01p/wifi_module.h"
 
 
 using namespace std;
