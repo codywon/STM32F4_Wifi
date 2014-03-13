@@ -15,7 +15,7 @@ int main()
     char received[960];
     init();
     while(1){
-    
+        
         scanf("%s", transmit);
         send(transmit);
         receive(received);

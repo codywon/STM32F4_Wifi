@@ -2,6 +2,7 @@
 #include "miosix.h"
 #include "spi_driver.h"
 #include "nRF24L01P.h"
+#include "../pedometer/pedometer.h"
 #include <miosix/kernel/scheduler/scheduler.h>
 
 #define BUFFER_TRANSMIT_SIZE            960
@@ -118,7 +119,7 @@ void *wifi_receive(void *arg){
                  printf("<RECEIVE> %s\n",data);
                  int steps = atoi(data);
                  if(steps != 0){
-                     //qua va il codice per chiamare il pedometro
+                     //Pedometer::instance().compareSteps(steps);
                      printf("Chiamo il pedometro perchè ho ricevuto %d passi\n",steps);
                  }pthread_mutex_lock(&buff_rx);
                  if(counter_rx<BUFFER_RECEIVE_SIZE){
