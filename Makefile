@@ -15,9 +15,12 @@ SUBDIRS := miosix
 ##
 SRC :=                                  \
 main.cpp				\
-nrf24l01p/spi_driver.cpp				\
-nrf24l01p/nRF24L01P.cpp				\
-nrf24l01p/wifi_module.cpp			    
+nrf24l01p/spi_driver.cpp		\
+nrf24l01p/nRF24L01P.cpp			\
+nrf24l01p/wifi_module.cpp		\
+audio/slice-and-play.cpp		\
+audio/adpcm.c				\
+audio/player.cpp			
 
 ##
 ## List here additional static libraries with relative path
