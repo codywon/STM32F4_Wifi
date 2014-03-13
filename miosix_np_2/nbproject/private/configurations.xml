@@ -52,6 +52,10 @@
         <in>slice-and-play.cpp</in>
         <in>slice-and-play.h</in>
       </df>
+      <df name="button">
+        <in>button.cpp</in>
+        <in>button.h</in>
+      </df>
       <df name="miosix">
         <df name="arch">
           <df name="arm7_lpc2000">
