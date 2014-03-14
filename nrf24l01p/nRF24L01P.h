@@ -244,6 +244,10 @@ private:
      */
     void flush_tx();
     
+    /**
+     * Function to reset all registers
+     */
+    void reset_module();
     
     int mode;
     /**

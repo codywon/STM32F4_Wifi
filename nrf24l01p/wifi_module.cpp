@@ -116,6 +116,7 @@ void *wifi_receive(void *arg){
                  orangeLed::low();
                  wifi->reset_interrupt();
                  wifi->receive(data,BUFFER_CELL_SIZE);
+                 
                  printf("<RECEIVE> %s\n",data);
                  int steps = atoi(data);
                  if(steps != 0){
@@ -133,6 +134,7 @@ void *wifi_receive(void *arg){
                  }
                  pthread_mutex_unlock(&buff_rx);
                  redLed::low();
+                 
        }
        pthread_mutex_unlock(&spi);
               
@@ -142,19 +144,23 @@ void *wifi_receive(void *arg){
 
 void *wifi_transmit(void *arg){
      char payload[BUFFER_CELL_SIZE];
+     payload[0]='h';
+     payload[1]='\0';
     for(;;){
         greenLed::high();
         pthread_mutex_lock(&buff_tx);
         while(counter_tx == 0)
           pthread_cond_wait(&cond,&buff_tx);
-        pthread_mutex_unlock(&buff_tx); 
+        /*pthread_mutex_unlock(&buff_tx); 
         pthread_mutex_lock(&spi);
+        wifi->transmit(32,payload);
+        //wifi->set_receive_mode();
         int status = wifi->get_rpd_status();
         pthread_mutex_unlock(&spi);
         if(status == 1){
             printf("rpd %d\n",status);
             status = 0;
-            pthread_mutex_lock(&buff_tx);
+            pthread_mutex_lock(&buff_tx);*/
             for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
                 for(int i = 0;i< BUFFER_CELL_SIZE;i++){
                         payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
@@ -168,8 +174,10 @@ void *wifi_transmit(void *arg){
                 usleep(400000);
                 greenLed::high();
             }
+            counter_tx = 0;
             pthread_mutex_unlock(&buff_tx); 
-        }
+            usleep(10000000);
+        //}
         //counter_tx = 0;
         
         
