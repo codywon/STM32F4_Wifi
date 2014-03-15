@@ -46,9 +46,6 @@ void send(char* payload){
     int i=0;
     pthread_mutex_lock(&buff_tx);
     if(counter_tx == BUFFER_TRANSMIT_SIZE){
-        //printf("Trasmit buffer is full\n");
-        //pthread_mutex_unlock(&buff_tx);
-        //return;
         counter_tx=0;
     }
     for(;i<BUFFER_CELL_SIZE-1;i++){
@@ -151,38 +148,23 @@ void *wifi_transmit(void *arg){
         pthread_mutex_lock(&buff_tx);
         while(counter_tx == 0)
           pthread_cond_wait(&cond,&buff_tx);
-        /*pthread_mutex_unlock(&buff_tx); 
-        pthread_mutex_lock(&spi);
-        wifi->transmit(32,payload);
-        //wifi->set_receive_mode();
-        int status = wifi->get_rpd_status();
-        pthread_mutex_unlock(&spi);
-        if(status == 1){
-            printf("rpd %d\n",status);
-            status = 0;
-            pthread_mutex_lock(&buff_tx);*/
-            for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
-                for(int i = 0;i< BUFFER_CELL_SIZE;i++){
-                        payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
-                        //buffer_transmit[i+BUFFER_CELL_SIZE*j] = 0;
-                }
-                printf("<TRASMIT> %s\n",payload);
-                pthread_mutex_lock(&spi);
-                wifi->transmit(BUFFER_CELL_SIZE,payload);
-                pthread_mutex_unlock(&spi);
-                greenLed::low();
-                usleep(400000);
-                greenLed::high();
+        for(int j=0;j<counter_tx/BUFFER_CELL_SIZE;j++){
+           for(int i = 0;i< BUFFER_CELL_SIZE;i++){
+               payload[i]=buffer_transmit[i+BUFFER_CELL_SIZE*j];
+                      
             }
-            counter_tx = 0;
-            pthread_mutex_unlock(&buff_tx); 
-            usleep(10000000);
-        //}
-        //counter_tx = 0;
-        
-        
-        //pthread_mutex_unlock(&spi);
-    }
+            printf("<TRASMIT> %s\n",payload);
+            pthread_mutex_lock(&spi);
+            wifi->transmit(BUFFER_CELL_SIZE,payload);
+            pthread_mutex_unlock(&spi);
+            greenLed::low();
+            usleep(400000);
+            greenLed::high();
+        }
+        counter_tx = 0;
+        pthread_mutex_unlock(&buff_tx); 
+        usleep(10000000);
+   }
         
 }      
 
