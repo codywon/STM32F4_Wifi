@@ -163,7 +163,7 @@ void *wifi_transmit(void *arg){
         }
         counter_tx = 0;
         pthread_mutex_unlock(&buff_tx); 
-        usleep(10000000);
+        usleep(60000000);
    }
         
 }      

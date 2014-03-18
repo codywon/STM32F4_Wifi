@@ -12,11 +12,12 @@ using namespace miosix;
 
 
 void *steps_thread(void *arg){
+    int steps;
     configureButtonInterrupt();
     for(;;){
         waitForButton();
-        int steps = 1123;
-        //int steps = Pedometer::instance().getSteps();
+        steps = 1123;
+        //steps = Pedometer::instance().getSteps();
         ring::instance().play_n_of_step(steps,100);
         usleep(100000);
         
@@ -26,6 +27,7 @@ void *steps_thread(void *arg){
 
 int main()
 {
+    int steps;
     init();
     char stepsCod[32];
 		
@@ -33,9 +35,9 @@ int main()
     pthread_create(&stepsThread,NULL,&steps_thread,NULL);
     while(1){
         usleep(500000);
-        int steps = 300;
+        steps = 300;
+        //steps = Pedometer::instance().getSteps();
         sprintf(stepsCod, "%d", steps);
-        //int steps = Pedometer::instance().getSteps();
         send(stepsCod);
 
     }
