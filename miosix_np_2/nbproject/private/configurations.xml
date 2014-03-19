@@ -473,9 +473,20 @@
         <in>wifi_module.h</in>
       </df>
       <df name="pedometer">
+        <in>LIS302.cpp</in>
+        <in>LIS302.h</in>
+        <in>pedometer.cpp</in>
         <in>pedometer.h</in>
+        <in>spi.cpp</in>
+        <in>spi.h</in>
       </df>
       <in>main.cpp</in>
+      <in>nRF24L01P.cpp</in>
+      <in>nRF24L01P.h</in>
+      <in>spi_driver.cpp</in>
+      <in>spi_driver.h</in>
+      <in>wifi_module.cpp</in>
+      <in>wifi_module.h</in>
     </df>
   </logicalFolder>
   <projectmakefile>miosix_np_2-Makefile.mk</projectmakefile>

@@ -2,9 +2,6 @@
 <configurationDescriptor version="90">
   <logicalFolder name="root" displayName="root" projectFiles="true" kind="ROOT">
     <df root=".." name="0">
-      <df name="button">
-        <in>button.cpp</in>
-      </df>
       <df name="miosix">
         <df name="arch">
           <df name="arm7_lpc2000">
@@ -405,18 +402,18 @@
         </df>
         <in>miosix.h</in>
       </df>
-      <df name="nrf24l01p">
-        <in>nRF24L01P.cpp</in>
-        <in>nRF24L01P.h</in>
-        <in>spi_driver.cpp</in>
-        <in>spi_driver.h</in>
-        <in>wifi_module.cpp</in>
-        <in>wifi_module.h</in>
-      </df>
       <df name="pedometer">
-        <in>pedometer.h</in>
+        <in>LIS302.cpp</in>
+        <in>pedometer.cpp</in>
+        <in>spi.cpp</in>
       </df>
       <in>main.cpp</in>
+      <in>nRF24L01P.cpp</in>
+      <in>nRF24L01P.h</in>
+      <in>spi_driver.cpp</in>
+      <in>spi_driver.h</in>
+      <in>wifi_module.cpp</in>
+      <in>wifi_module.h</in>
     </df>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -1548,6 +1545,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="lpc2138_miosix_board" type="0">
       <toolsSet>
@@ -2661,6 +2670,18 @@
       <item path="../miosix/util/version.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="stm32f103ze_stm3210e-eval" type="0">
@@ -3783,6 +3804,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="stm32f103ve_mp3v2" type="0">
       <toolsSet>
@@ -4898,6 +4931,18 @@
       <item path="../miosix/util/version.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="stm32f100rb_stm32vldiscovery" type="0">
@@ -6015,6 +6060,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="stm32f103ve_strive_mini" type="0">
       <toolsSet>
@@ -7130,6 +7187,18 @@
       <item path="../miosix/util/version.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="stm32f103ze_redbull_v2" type="0">
@@ -8247,6 +8316,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="stm32f407vg_stm32f4discovery" type="0">
       <toolsSet>
@@ -8296,8 +8377,6 @@
           </ccTool>
         </makeTool>
       </makefileType>
-      <item path="../button/button.cpp" ex="false" tool="1" flavor2="0">
-      </item>
       <item path="../main.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../miosix/arch/arm7_lpc2000/common/arch_settings.h"
@@ -9363,19 +9442,23 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../nrf24l01p/nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../nrf24l01p/nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
       </item>
-      <item path="../nrf24l01p/spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../pedometer/LIS302.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../nrf24l01p/spi_driver.h" ex="false" tool="3" flavor2="0">
+      <item path="../pedometer/pedometer.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../nrf24l01p/wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      <item path="../pedometer/spi.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../nrf24l01p/wifi_module.h" ex="false" tool="3" flavor2="0">
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
       </item>
-      <item path="../pedometer/pedometer.h" ex="false" tool="3" flavor2="0">
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="stm32f207ig_stm3220g-eval" type="0">
@@ -10491,6 +10574,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="stm32f207zg_ethboard_v2" type="0">
       <toolsSet>
@@ -11604,6 +11699,18 @@
       <item path="../miosix/util/version.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
     <conf name="stm32f207ze_als_camboard" type="0">
@@ -12719,6 +12826,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="stm32l151c8_als_mainboard" type="0">
       <toolsSet>
@@ -13833,6 +13952,18 @@
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
       </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
+      </item>
     </conf>
     <conf name="stm32f407vg_bitsboard" type="0">
       <toolsSet>
@@ -14946,6 +15077,18 @@
       <item path="../miosix/util/version.cpp" ex="false" tool="1" flavor2="0">
       </item>
       <item path="../miosix/util/version.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../nRF24L01P.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../spi_driver.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../spi_driver.h" ex="false" tool="3" flavor2="0">
+      </item>
+      <item path="../wifi_module.cpp" ex="false" tool="1" flavor2="0">
+      </item>
+      <item path="../wifi_module.h" ex="false" tool="3" flavor2="0">
       </item>
     </conf>
   </confs>
