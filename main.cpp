@@ -16,12 +16,18 @@ void *steps_thread(void *arg){
     configureButtonInterrupt();
     for(;;){
         waitForButton();
-        steps = 1123;
-        //steps = Pedometer::instance().getSteps();
-        ring::instance().play_n_of_step(steps,100);
+        steps = Pedometer::instance().getSteps();
+        if(steps != 0){
+                ring::instance().play_n_of_step(steps,100);
+        }
         usleep(100000);
         
     }
+}
+
+void *pedometerTask(void *arg) {
+    Pedometer::instance().init();
+    Pedometer::instance().start();
 }
 
 
@@ -32,13 +38,16 @@ int main()
     char stepsCod[32];
 		
     pthread_t stepsThread;
+    Thread *pedometer_t;
+    pedometer_t = Thread::create(pedometerTask, 2048, 2, NULL, Thread::JOINABLE);
     pthread_create(&stepsThread,NULL,&steps_thread,NULL);
     while(1){
         usleep(500000);
-        steps = 300;
-        //steps = Pedometer::instance().getSteps();
-        sprintf(stepsCod, "%d", steps);
-        send(stepsCod);
+        steps = Pedometer::instance().getSteps();
+        if(steps != 0){
+            sprintf(stepsCod, "%d", steps);
+            send(stepsCod);
+        }
 
     }
      

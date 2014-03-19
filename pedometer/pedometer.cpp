@@ -10,6 +10,7 @@
 #include "pedometer.h"
 #include "LIS302.h"
 #include "miosix.h"
+#include "audio/slice-and-play.h"
 
 
 using namespace std;
@@ -35,6 +36,8 @@ volatile long old_time, new_time, current_time;
 
 bool active;
 int mode;
+
+pthread_t playerAudio;
 
 Pedometer& Pedometer::instance(){
     static Pedometer singleton;
@@ -192,4 +195,21 @@ int Pedometer::getMode() {
     if(current_time - new_time > 2000)
         mode = Pedometer::MODE_STEADY;
     return mode;
+}
+
+void *playVictory(void *arg){
+    ring::instance().victory_Song(100);
+}
+
+void *playLoose(void *arg){
+    ring::instance().looser_Song(100);
+}
+
+void Pedometer::compareSteps(int otherSteps){
+    if(steps <= otherSteps){
+        pthread_create(&playerAudio,NULL,&playLoose,NULL);
+    }
+    else{
+        pthread_create(&playerAudio,NULL,&playVictory,NULL);
+    }
 }

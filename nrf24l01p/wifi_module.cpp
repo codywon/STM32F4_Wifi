@@ -117,7 +117,7 @@ void *wifi_receive(void *arg){
                  printf("<RECEIVE> %s\n",data);
                  int steps = atoi(data);
                  if(steps != 0){
-                     //Pedometer::instance().compareSteps(steps);
+                     Pedometer::instance().compareSteps(steps);
                      printf("Chiamo il pedometro perchè ho ricevuto %d passi\n",steps);
                  }pthread_mutex_lock(&buff_rx);
                  if(counter_rx<BUFFER_RECEIVE_SIZE){
@@ -163,7 +163,7 @@ void *wifi_transmit(void *arg){
         }
         counter_tx = 0;
         pthread_mutex_unlock(&buff_tx); 
-        usleep(60000000);
+        usleep(20000000);
    }
         
 }      
