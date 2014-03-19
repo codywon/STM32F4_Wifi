@@ -481,12 +481,6 @@
         <in>spi.h</in>
       </df>
       <in>main.cpp</in>
-      <in>nRF24L01P.cpp</in>
-      <in>nRF24L01P.h</in>
-      <in>spi_driver.cpp</in>
-      <in>spi_driver.h</in>
-      <in>wifi_module.cpp</in>
-      <in>wifi_module.h</in>
     </df>
   </logicalFolder>
   <projectmakefile>miosix_np_2-Makefile.mk</projectmakefile>
