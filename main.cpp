@@ -1,4 +1,11 @@
-
+/**
+ * File:   main.cpp
+ *  \brief     This file contains integration code.
+ *  \author    Andrea Corna
+ *  \author    Lorenzo Fontana
+ *  \version   1.0
+ *  \date      20/03/2014
+ */
 #include <cstdio>
 #include "miosix.h"
 #include "./nrf24l01p/wifi_module.h"
@@ -27,7 +34,12 @@ static Thread *pedometer_t;
 
 
 
-
+/**
+ * This function is implemented by a thread in order to listen how many steps you have done
+ * pushing on blue button
+ * @param arg
+ * @return 
+ */
 void *steps_thread(void *arg){
     int steps;
     configureButtonInterrupt();
@@ -42,18 +54,29 @@ void *steps_thread(void *arg){
     }
 }
 
+/**
+ * Function to init and start pedometer core. It should be implemented by a thread
+ * @param arg
+ * @return 
+ */
 void *pedometerTask(void *arg) {
     Pedometer::instance().init();
     Pedometer::instance().start();
 }
 
+/**
+ * Initialize all threads
+ */
 void initCore(){
     pedometer_t = Thread::create(pedometerTask, 2048, 2, NULL, Thread::JOINABLE);
     pthread_create(&stepsThread,NULL,&steps_thread,NULL);
     init();
 }
 
-
+/**
+ * Main function
+ * @return -1 if something goes wrong
+ */
 int main()
 {
     int steps;
@@ -85,7 +108,7 @@ int main()
         }
 
     }
-     
+    return -1; 
        
 }
 
