@@ -261,10 +261,7 @@ int nRF24L01P::transmit(int count, char* data){
         
     } //polling waiting for transfer complete
     set_register(NRF24L01P_REG_STATUS, NRF24L01P_STATUS_TX_DS); /*clear bit data sent tx fifo*/
-    //if( old_mode == NRF24L01P_RX_MODE){              //reset the state before
-        set_receive_mode();
-    //}
-    //CE_restore(old_ce);
+    set_receive_mode();
     return count;
     
 }
