@@ -81,6 +81,7 @@ int main()
 {
     int steps;
     char stepsCod[32];
+    float calories = 0;
 		
     Lcd44780 lcd(rs::getPin(), e::getPin(), d4::getPin(), d5::getPin(), d6::getPin(), d7::getPin(), LCD_ROW, LCD_COL);
     while(1){
@@ -90,10 +91,12 @@ int main()
             sprintf(stepsCod, "%d", steps);
             send(stepsCod);
         }
+        calories = Pedometer::instance().getCalories();
         lcd.clear();
         lcd.go(0,0);
-        lcd.printf("%d", steps);
+        lcd.printf("%.2f", calories);
         lcd.go(0,1);
+        lcd.printf("%d", steps);
         switch(Pedometer::instance().getMode()) {
             case Pedometer::MODE_STEADY:
                 lcd.printf("STEADY");
