@@ -83,6 +83,7 @@ int main()
     char stepsCod[32];
     float calories = 0;
 		
+    initCore();
     Lcd44780 lcd(rs::getPin(), e::getPin(), d4::getPin(), d5::getPin(), d6::getPin(), d7::getPin(), LCD_ROW, LCD_COL);
     while(1){
         usleep(500000);

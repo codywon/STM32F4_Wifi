@@ -138,8 +138,9 @@ typedef Gpio<GPIOA_BASE,1> IRQ;
 
 
 nRF24L01P::nRF24L01P() {
-    setup_Gpio();
+    
     spi = new spi_driver();
+    setup_Gpio();
     reset_module();
     power_down();
     clear_pending_interrupt();

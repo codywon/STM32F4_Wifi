@@ -2,8 +2,8 @@
 #include "miosix.h"
 #include "spi_driver.h"
 #include "nRF24L01P.h"
-#include "../pedometer/pedometer.h"
 #include <miosix/kernel/scheduler/scheduler.h>
+#include "../pedometer/pedometer.h"
 
 #define BUFFER_TRANSMIT_SIZE            32
 #define BUFFER_CELL_SIZE                32
@@ -104,6 +104,7 @@ void configureModuleInterrupt()
 
 void *wifi_receive(void *arg){
     char data[BUFFER_CELL_SIZE];
+    int steps;
     for(;;){
        orangeLed::high();
        waitForModule();
@@ -115,7 +116,7 @@ void *wifi_receive(void *arg){
                  wifi->receive(data,BUFFER_CELL_SIZE);
                  
                  printf("<RECEIVE> %s\n",data);
-                 int steps = atoi(data);
+                 steps= atoi(data);
                  if(steps != 0){
                      Pedometer::instance().compareSteps(steps);
                      printf("Chiamo il pedometro perchè ho ricevuto %d passi\n",steps);
