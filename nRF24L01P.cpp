@@ -149,7 +149,11 @@ nRF24L01P::nRF24L01P() {
     disable_auto_retransmit();
     disable_tx_interrupt();
     set_transfer_size(32);
+<<<<<<< HEAD
     set_frequency(2525);
+=======
+    //set_frequency(2525);
+>>>>>>> 0e35c33c665f8602928092083f816a87b6209046
     printf("Status %d\n",get_register_status());
     printf("Output power %d\n",get_output_power());
     printf("Air data rate %d\n",get_air_data_rate());
