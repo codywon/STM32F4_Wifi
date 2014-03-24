@@ -139,6 +139,7 @@ typedef Gpio<GPIOA_BASE,1> IRQ;
 
 nRF24L01P::nRF24L01P() {
     spi = new spi_driver();
+    reset_module();
     power_down();
     setup_Gpio();
     clear_pending_interrupt();
@@ -149,11 +150,15 @@ nRF24L01P::nRF24L01P() {
     disable_auto_retransmit();
     disable_tx_interrupt();
     set_transfer_size(32);
+<<<<<<< HEAD:nRF24L01P.cpp
 <<<<<<< HEAD
     set_frequency(2525);
 =======
     //set_frequency(2525);
 >>>>>>> 0e35c33c665f8602928092083f816a87b6209046
+=======
+    set_frequency(2500);
+>>>>>>> 82f3dc04ec6145c28ba3279695b0bc6b80149b75:nrf24l01p/nRF24L01P.cpp
     printf("Status %d\n",get_register_status());
     printf("Output power %d\n",get_output_power());
     printf("Air data rate %d\n",get_air_data_rate());
@@ -264,10 +269,7 @@ int nRF24L01P::transmit(int count, char* data){
         
     } //polling waiting for transfer complete
     set_register(NRF24L01P_REG_STATUS, NRF24L01P_STATUS_TX_DS); /*clear bit data sent tx fifo*/
-    //if( old_mode == NRF24L01P_RX_MODE){              //reset the state before
-        set_receive_mode();
-    //}
-    //CE_restore(old_ce);
+    set_receive_mode();
     return count;
     
 }
@@ -773,5 +775,21 @@ void nRF24L01P::reset_interrupt(){
 }
 
 int nRF24L01P::get_rpd_status(){
-    return get_register(NRF24L01P_REG_RPD);
+    return get_register(NRF24L01P_REG_RPD) & 0x01;
+}
+
+void nRF24L01P::reset_module(){
+    set_register(NRF24L01P_REG_CONF, 8); //reset config_register to 00001000
+    set_register(NRF24L01P_REG_AA, 63);
+    set_register(NRF24L01P_REG_EN_RXADDR, 3);
+    set_register(NRF24L01P_REG_SETUP_AW,3);
+    set_register(NRF24L01P_REG_SETUP_RETR,3);
+    set_register(NRF24L01P_REG_RF_CH, 2);
+    set_register(NRF24L01P_REG_RF_SETUP,14);
+    set_register(NRF24L01P_REG_STATUS,14);
+    set_register(NRF24L01P_REG_RPD, 0);
+    set_register(NRF24L01P_REG_RX_ADDR_P0, 996028180455);
+    set_register(NRF24L01P_REG_TX_ADDR, 996028180455 );
+    set_register(NRF24L01P_REG_RX_PW_P0,0);
+    
 }
