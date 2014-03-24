@@ -480,8 +480,6 @@
         <in>spi.cpp</in>
         <in>spi.h</in>
       </df>
-      <df name="report">
-      </df>
       <in>main.cpp</in>
     </df>
   </logicalFolder>
