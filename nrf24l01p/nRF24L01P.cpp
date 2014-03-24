@@ -138,10 +138,10 @@ typedef Gpio<GPIOA_BASE,1> IRQ;
 
 
 nRF24L01P::nRF24L01P() {
+    setup_Gpio();
     spi = new spi_driver();
     reset_module();
     power_down();
-    setup_Gpio();
     clear_pending_interrupt();
     set_crc_width(NRF24L01P_CRC_8_BIT);
     disable_auto_ack();
@@ -236,7 +236,6 @@ void nRF24L01P::set_transmit_mode(){
 }
 
 int nRF24L01P::transmit(int count, char* data){
-    //int old_ce = CE::value();
     if( count < 0)
         return 0;
     if( count > NRF24L01P_TX_FIFO_SIZE)
@@ -249,7 +248,6 @@ int nRF24L01P::transmit(int count, char* data){
         spi->write(*data++);
     }
     CS::high();
-    //int old_mode = mode;
     set_transmit_mode();
     CE::high();
     usleep(NRF24L01P_TPECETR);  
